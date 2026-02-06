@@ -28,4 +28,20 @@ const createHoot = async (req, res) => {
   }
 };
 
-export { getHoots, getHoot, createHoot };
+const updateHoot = async (req, res) => {
+  try {
+    const hoot = await Hoot.findById(req.params.hootId);
+    if (hoot.body.author !== req.user._id) {
+      res.status(403).send("Permission denied");
+    }
+    const updatedHoot = await Hoot.findByIdAndUpdate(
+      req.params.hootId,
+      req.body,
+    );
+    res.status(200).json(updatedHoot);
+  } catch (e) {
+    res.status(500).json(error);
+  }
+};
+
+export { getHoots, getHoot, createHoot, updateHoot };
