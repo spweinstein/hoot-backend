@@ -28,8 +28,19 @@ const createHoot = async (req, res) => {
   }
 };
 
-export {
-  getHoots,
-  getHoot,
-  createHoot
+const deleteHoot = async (req, res) => {
+  try {
+    const hoot = await Hoot.findById(req.params.hootId);
+
+    if (!hoot.author.equals(req.user._id)) {
+      return res.status(403).json({ error: "You're not allowed to do that!" });
+    }
+
+    const deletedHoot = await Hoot.findByIdAndDelete(req.params.hootId);
+    res.status(200).json(deletedHoot);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
+
+export { getHoots, getHoot, createHoot, deleteHoot };
