@@ -6,3 +6,5 @@ import * as controllers from "../controllers/hoots.js";
 const router = Router();
 
 router.post("/", verifyToken, controllers.createHoot);
+
+router.delete("/:hootId", verifyToken, controllers.deleteHoot);
