@@ -59,4 +59,17 @@ const deleteHoot = async (req, res) => {
   }
 };
 
-export { getHoots, getHoot, createHoot, deleteHoot, updateHoot };
+const createComment = async (req, res) => {
+  try {
+    req.body.author = req.user._id;
+    const hoot = await Hoot.findById(req.params.hootId);
+    hoot.comments.push(req.body);
+    await hoot.save();
+    const newComment = hoot.comments[hoot.comments.length - 1];
+    res.status(201).json(newComment);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
+export { getHoots, getHoot, createHoot, deleteHoot, updateHoot, createComment };
