@@ -31,12 +31,13 @@ const createHoot = async (req, res) => {
 const updateHoot = async (req, res) => {
   try {
     const hoot = await Hoot.findById(req.params.hootId);
-    if (hoot.body.author !== req.user._id) {
-      res.status(403).send("Permission denied");
+    if (hoot.body.author.equals(req.user._id)) {
+      res.status(403).json({ error: "Permission denied" });
     }
     const updatedHoot = await Hoot.findByIdAndUpdate(
       req.params.hootId,
       req.body,
+      { new: true },
     );
     res.status(200).json(updatedHoot);
   } catch (e) {
