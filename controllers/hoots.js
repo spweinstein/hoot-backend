@@ -24,7 +24,7 @@ const getHoot = async (req, res) => {
 const createHoot = async (req, res) => {
   try {
     req.body.author = req.user._id;
-    const hoot = await Hoot.create(req.body).populate("author");
+    const hoot = await Hoot.create(req.body); //.populate("author");
     res.status(201).json(hoot);
   } catch (error) {
     res.status(500).json(error);
@@ -34,7 +34,7 @@ const createHoot = async (req, res) => {
 const updateHoot = async (req, res) => {
   try {
     const hoot = await Hoot.findById(req.params.hootId);
-    if (hoot.body.author.equals(req.user._id)) {
+    if (!hoot.author.equals(req.user._id)) {
       res.status(403).json({ error: "Permission denied" });
     }
     const updatedHoot = await Hoot.findByIdAndUpdate(
@@ -44,7 +44,7 @@ const updateHoot = async (req, res) => {
     );
     res.status(200).json(updatedHoot);
   } catch (e) {
-    res.status(500).json(error);
+    res.status(500).json(e);
   }
 };
 
