@@ -66,10 +66,9 @@ const deleteHoot = async (req, res) => {
 const createComment = async (req, res) => {
   try {
     req.body.author = req.user._id;
-    const hoot = await Hoot.findById(req.params.hootId).populate([
-      "author",
-      "comments.author",
-    ]);
+    const hoot = await Hoot.findById(req.params.hootId).populate(
+      "author comments.author",
+    );
     hoot.comments.push(req.body);
     await hoot.save();
     const newComment = hoot.comments[hoot.comments.length - 1];
